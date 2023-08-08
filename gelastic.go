@@ -1,10 +1,11 @@
-package Gelastic
+package main
 
 import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -18,13 +19,15 @@ type Gelastic struct {
 }
 
 
-func (g *Gelastic) InitClient(Address string, Port int) {
+func (g *Gelastic) InitClient(Address string, Port int, User string, Pass string) {
 	g.ElasticEndpoint = &http.Client{
 		
 	}
 
 	g.Address 	= Address
 	g.Port 		= Port
+	g.ElasticUser = User
+	g.ElasticPassword = Pass
 }
 
 func (g *Gelastic) makeElasticRequest(method string, path string, data []byte) {
@@ -35,6 +38,14 @@ func (g *Gelastic) makeElasticRequest(method string, path string, data []byte) {
 
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(g.ElasticUser, g.ElasticPassword)
+
+	resp, err := g.ElasticEndpoint.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	str, _ := io.ReadAll(resp.Body)
+	println(string(str))
 }
 
 func (g *Gelastic) AddDocument(index string, data any) {
