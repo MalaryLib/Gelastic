@@ -14,6 +14,8 @@ type Gelastic struct {
 	ElasticUser 	string
 	ElasticPassword	string
 
+	ElasticTimeFormat string
+
 	Address			string
 	Port			int
 }
@@ -28,6 +30,8 @@ func (g *Gelastic) InitClient(Address string, Port int, User string, Pass string
 	g.Port 		= Port
 	g.ElasticUser = User
 	g.ElasticPassword = Pass
+
+	g.ElasticTimeFormat = "2006-01-02T15:04:05Z07:00"
 }
 
 func (g *Gelastic) makeElasticRequest(method string, path string, data []byte) {
