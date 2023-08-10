@@ -39,6 +39,7 @@ func (g *Gelastic) makeElasticRequest(method string, path string, data []byte) {
 	if err != nil {
 		panic(err)
 	}
+	req.Close = true
 
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(g.ElasticUser, g.ElasticPassword)
@@ -47,6 +48,7 @@ func (g *Gelastic) makeElasticRequest(method string, path string, data []byte) {
 	if err != nil {
 		panic(err)
 	}
+	defer resp.Body.Close()
 
 	str, _ := io.ReadAll(resp.Body)
 	println(string(str))
